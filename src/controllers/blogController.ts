@@ -38,9 +38,9 @@ export const createPost = async (req: Request | any, res: Response) => {
   }
 };
 
-export const updateTodo = async (req: Request, res: Response) => {
+export const updatePost = async (req: Request, res: Response) => {
   try {
-    const { description, completed } = req.body;
+    const { pictures, ...rest } = req.body;
     const { id } = req.params;
     //validate todo form inputs
     const validateUser = updateBlogPostSchema.validate(req.body, option);
@@ -58,8 +58,9 @@ export const updateTodo = async (req: Request, res: Response) => {
     }
     const updateRecord = await Blog.findByIdAndUpdate(id,
       {
-        description,
-        completed,
+        ...rest,
+        pictures,
+    
       },
 
       {

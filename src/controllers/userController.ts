@@ -41,7 +41,7 @@ export const RegisterUser = async (req: Request, res: Response) => {
         age,
       });
       return res.status(200).json({
-        message: "Registtration Successful",
+        message: "Registration Successful",
         data: newUser,
       });
     }
