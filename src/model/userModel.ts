@@ -4,29 +4,26 @@ interface UserType {
   [key: string]: string | boolean | Array<string>;
 }
 
-
 const userSchema = new mongoose.Schema(
   {
-    firstName: {type: String}, 
-    lastName: {type: String}, 
-    email: {type: String}, 
-    password: {type: String}, 
-    phoneNumber: {type: String}, 
-    country: {type: String}, 
-    age:  {type: String}, 
-    todos: [
+    fullname: { type: String },
+    email: { type: String },
+    password: { type: String },
+    profile_picture: { type: String },
+    phone_number: { type: String },
+    country: { type: String },
+    ecommerce: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "blog"
-      }
-    ]
-
+        ref: "ecommerce",
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-const User = mongoose.model<UserType>('User', userSchema)
+const User = mongoose.model<UserType>("User", userSchema);
 
 export = User;

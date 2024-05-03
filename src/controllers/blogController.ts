@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { creatBlogPostSchema, updateBlogPostSchema, option } from "../utils/utils";
-import Blog from "../model/BlogPostModel";
+import Blog from "../model/e-commerceModel";
 import { v2 as cloudinaryV2 } from "cloudinary";
 
 export const createPost = async (req: Request | any, res: Response) => {
