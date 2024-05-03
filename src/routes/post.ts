@@ -8,7 +8,7 @@ import {
   getUserTodos,
   deleteSingleTodo,
   singleTodo,
-} from "../controllers/blogController";
+} from "../controllers/ecommerceController";
 
 const router = express.Router();
 

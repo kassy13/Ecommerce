@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
-import { creatBlogPostSchema, updateBlogPostSchema, option } from "../utils/utils";
-import Blog from "../model/e-commerceModel";
+import {
+  creatProductSchema,
+  updateProductSchema,
+  option,
+} from "../utils/utils";
+import Ecommerce from "../model/e-commerceModel";
 import { v2 as cloudinaryV2 } from "cloudinary";
 
 export const createPost = async (req: Request | any, res: Response) => {
@@ -8,7 +12,7 @@ export const createPost = async (req: Request | any, res: Response) => {
     const verify = req.user;
 
     //validate todo form inputs
-    const validateUser = creatBlogPostSchema.validate(req.body, option);
+    const validateUser = creatProductSchema.validate(req.body, option);
 
     if (validateUser.error) {
       res.status(400).json({ Error: validateUser.error.details[0].message });
@@ -17,14 +21,15 @@ export const createPost = async (req: Request | any, res: Response) => {
     let links = [];
     if (Array.isArray(req.files) && req.files.length > 0) {
       // Upload images to Cloudinary and retrieve their URLs
-      links = await Promise.all(req.files.map(async (item: Record<string, any>) => {
-        const result = await cloudinaryV2.uploader.upload(item.path);
-        return result.secure_url;
-      }));
+      links = await Promise.all(
+        req.files.map(async (item: Record<string, any>) => {
+          const result = await cloudinaryV2.uploader.upload(item.path);
+          return result.secure_url;
+        })
+      );
     }
 
-
-    const newPost = await Blog.create({
+    const newPost = await Ecommerce.create({
       ...validateUser.value,
       user: verify._id,
       pictures: links.join(","),
@@ -32,7 +37,7 @@ export const createPost = async (req: Request | any, res: Response) => {
 
     return res
       .status(200)
-      .json({ message: "Blog Post created successfully", newPost });
+      .json({ message: "Ecommerce Post created successfully", newPost });
   } catch (error) {
     console.log(error);
   }
@@ -43,24 +48,24 @@ export const updatePost = async (req: Request, res: Response) => {
     const { pictures, ...rest } = req.body;
     const { id } = req.params;
     //validate todo form inputs
-    const validateUser = updateBlogPostSchema.validate(req.body, option);
+    const validateUser = updateProductSchema.validate(req.body, option);
 
     if (validateUser.error) {
       res.status(400).json({ Error: validateUser.error.details[0].message });
     }
 
-    const todo = await Blog.findById({ _id: id });
+    const todo = await Ecommerce.findById({ _id: id });
 
     if (!todo) {
       return res.status(400).json({
         error: "Todo not found",
       });
     }
-    const updateRecord = await Blog.findByIdAndUpdate(id,
+    const updateRecord = await Ecommerce.findByIdAndUpdate(
+      id,
       {
         ...rest,
         pictures,
-    
       },
 
       {
@@ -87,7 +92,7 @@ export const updatePost = async (req: Request, res: Response) => {
 
 export const getTodos = async (req: Request, res: Response) => {
   try {
-    const getAllUserTodos = await Blog.find().populate("user");
+    const getAllUserTodos = await Ecommerce.find().populate("user");
 
     res.status(200).json({
       msg: "Todos successfully fetched",
@@ -102,7 +107,7 @@ export const singleTodo = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const getsingleTodos = await Blog.findById(id);
+    const getsingleTodos = await Ecommerce.findById(id);
 
     if (!getsingleTodos) {
       return res.status(400).json({
@@ -111,7 +116,7 @@ export const singleTodo = async (req: Request, res: Response) => {
     }
     res.status(200).json({
       msg: "Todos successfully fetched",
-      getsingleTodos
+      getsingleTodos,
     });
   } catch (error) {
     console.log(error);
@@ -122,7 +127,7 @@ export const getUserTodos = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
-    const getAllUserTodos = await Blog.find({ user: userId });
+    const getAllUserTodos = await Ecommerce.find({ user: userId });
 
     res.status(200).json({
       msg: "Todos successfully fetched",
@@ -133,13 +138,11 @@ export const getUserTodos = async (req: Request, res: Response) => {
   }
 };
 
-
-
 export const deleteSingleTodo = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const deleteSingleRecord = await Blog.findByIdAndDelete(id)
+    const deleteSingleRecord = await Ecommerce.findByIdAndDelete(id);
     if (!deleteSingleRecord) {
       return res.status(400).json({
         error: "Todo not found",
@@ -148,7 +151,7 @@ export const deleteSingleTodo = async (req: Request, res: Response) => {
 
     res.status(200).json({
       message: "Todo successfully deleted",
-      deleteSingleRecord
+      deleteSingleRecord,
     });
   } catch (error) {
     console.error("Problem deleting todo");
