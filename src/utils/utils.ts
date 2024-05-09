@@ -1,8 +1,7 @@
 import Joi from "joi";
 
 export const RegisterSchema = Joi.object({
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
+  fullname: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string()
     .min(6)
@@ -13,9 +12,9 @@ export const RegisterSchema = Joi.object({
     .required()
     .label("confirm password")
     .messages({ "any.only": "{{#label}} does not match" }),
-  phoneNumber: Joi.string().required(),
+  phone_number: Joi.string().required(),
+  profile_picture: Joi.string(),
   country: Joi.string().required(),
-  age: Joi.number().required(),
 });
 
 export const LoginSchema = Joi.object({

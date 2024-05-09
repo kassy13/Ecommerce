@@ -3,6 +3,7 @@ import { RegisterSchema, option, LoginSchema } from "../utils/utils";
 import User from "../model/userModel";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { v2 as cloudinaryV2 } from "cloudinary";
 
 const jwtsecret = process.env.JWT_SECRET as string;
 
@@ -11,6 +12,7 @@ export const RegisterUser = async (req: Request, res: Response) => {
     const fullname = req.body.fullname;
     const email = req.body.email;
     const password = req.body.password;
+    const profile_picture = req.body.profile_picture;
     const confirm_password = req.body.confirm_password;
     const phone_number = req.body.phone_number;
     const country = req.body.country;
@@ -28,10 +30,23 @@ export const RegisterUser = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email: email });
 
+    // Initialize a variable to store and retrieve the pic
+    let pictureUrl = "";
+
+    // Check if a file was uploaded
+
+    if (req.file) {
+      // Upload the image to cloudinary
+      const result = await cloudinaryV2.uploader.upload(req.file.path);
+      // store the url of the uploaded  picture
+      pictureUrl = result.secure_url;
+    }
+
     if (!user) {
       const newUser = await User.create({
         fullname,
         email,
+        profile_picture: pictureUrl,
         password: passwordHash,
         phone_number,
         country,

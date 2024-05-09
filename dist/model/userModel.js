@@ -4,21 +4,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const mongoose_1 = __importDefault(require("mongoose"));
 const userSchema = new mongoose_1.default.Schema({
-    firstName: { type: String },
-    lastName: { type: String },
+    fullname: { type: String },
     email: { type: String },
     password: { type: String },
-    phoneNumber: { type: String },
+    profile_picture: { type: String },
+    phone_number: { type: String },
     country: { type: String },
-    age: { type: String },
-    todos: [
+    ecommerce: [
         {
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: "blog"
-        }
-    ]
+            ref: "ecommerce",
+        },
+    ],
 }, {
     timestamps: true,
 });
-const User = mongoose_1.default.model('User', userSchema);
+const User = mongoose_1.default.model("User", userSchema);
 module.exports = User;
